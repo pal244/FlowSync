@@ -20,16 +20,15 @@ def signup():
     password = data.get("password")
 
     if not username or not password:
-        return jsonify({"message": "Username and password are required."}), 400
+        return jsonify({"success": False, "message": "Username and password are required."}), 400
 
     if username in users:
-        return jsonify({"message": "User already exists."}), 409
+        return jsonify({"success": False, "message": "User already exists."}), 409
 
     users[username] = password
-    return jsonify({"message": "Signup successful!"}), 201
+    return jsonify({"success": True, "message": "Signup successful!"}), 201
 
 # Login route
-# this is a new comment
 @app.route("/api/login", methods=["POST"])
 def login():
     data = request.get_json()
@@ -37,19 +36,19 @@ def login():
     password = data.get("password")
 
     if users.get(username) == password:
-        return jsonify({"message": "Login successful!"}), 200
+        return jsonify({"success": True, "message": "Login successful!"}), 200
     else:
-        return jsonify({"message": "Invalid credentials."}), 401
+        return jsonify({"success": False, "message": "Invalid credentials."}), 401
 
-# Water intake saving (optional route)
+# Optional: Save water intake
 @app.route("/api/save_intake", methods=["POST"])
 def save_intake():
     data = request.get_json()
     username = data.get("username")
     intake = data.get("intake")
 
-    print(f"User {username} recorded {intake} ml of water.")  # Logging to console
-    return jsonify({"message": "Water intake saved."}), 200
+    print(f"User {username} recorded {intake} ml of water.")  # Debug logging
+    return jsonify({"success": True, "message": "Water intake saved."}), 200
 
 if __name__ == "__main__":
     app.run(debug=True)
